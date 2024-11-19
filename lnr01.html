@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lock N Roll</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+        }
+        #game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lock N Roll</h1>
+    <div id="game">
+        <button onclick="rollDice()">Roll Dice</button>
+        <p id="diceResult"></p>
+        <p id="score"></p>
+    </div>
+
+    <script>
+        function rollDice() {
+            let dice = [];
+            for (let i = 0; i < 3; i++) {
+                dice.push(Math.floor(Math.random() * 6) + 1);
+            }
+            document.getElementById('diceResult').innerText = 'Dice: ' + dice.join(', ');
+
+            let score = calculateScore(dice);
+            document.getElementById('score').innerText = 'Score: ' + score;
+        }
+
+        function calculateScore(dice) {
+            let score = dice.reduce((a, b) => a + b, 0);
+
+            let counts = {};
+            dice.forEach(die => counts[die] = (counts[die] || 0) + 1);
+
+            let values = Object.values(counts);
+            if (values.includes(3)) {
+                score += 30; // 3 of a kind
+            } else if (values.includes(2)) {
+                score += 5; // pair
+            } else if (dice.includes(1) && dice.includes(2) && dice.includes(3) ||
+                       dice.includes(2) && dice.includes(3) && dice.includes(4) ||
+                       dice.includes(3) && dice.includes(4) && dice.includes(5) ||
+                       dice.includes(4) && dice.includes(5) && dice.includes(6)) {
+                score += 10; // straight
+            }
+
+            return score;
+        }
+    </script>
+</body>
+</html>
